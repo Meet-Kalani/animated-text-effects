@@ -1,0 +1,81 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,body{
+    height: 100%;
+}
+
+body{
+    font-family: "Poppins", sans-serif;
+    height: 100%;
+    background-color: #274156;
+}
+
+.main-container{
+    position: relative;
+    height: 100%;
+}
+
+button{
+    padding: 8px 22px;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    background-color: white;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+}
+
+.box{
+    width: 200px;
+    height: 200px;
+    background-color: #D0CCD0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    animation-duration: 2s;
+}
+
+.fade-in-animation{
+    animation-name: fadeIn;
+}
+
+.bounce-animation{
+    animation-name: bounce;
+}
+
+@keyframes fadeIn {
+    from{
+        opacity: 0;
+    }
+
+    to{
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: translate(-50%, -50%) translateY(-100px);
+        opacity: 0;
+    }
+
+    25% {
+        transform: translate(-50%, -50%) translateY(80px);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translateY(-50px);
+    }
+
+    75% {
+        transform: translate(-50%, -50%) translateY(25px);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) translateY(0);
+        opacity: 1;
+    }
+}
