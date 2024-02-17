@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(timeoutId);
         animationTextElement.textContent = textToAnimate;
 
-        // for reanimating text when user has already applied it
+        // for reanimating text when user has already applied it so removing the class adding it again
         clearAnimation();
         animationTextElement.classList.add('fade-in-animation');
 
-        // removing animation class so when user clicks again it adds class so it can reanimate
+        // removing animation class so when user clicks again it adds class so it can reanimate -- for double click
         animationTextElement.addEventListener('animationend', clearAnimation);
     });
 
@@ -22,11 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(timeoutId);
         animationTextElement.textContent = textToAnimate;
 
-        // for reanimating text when user has already applied it
+        // for reanimating text when user has already applied it so removing the class adding it again
         clearAnimation();
         animationTextElement.classList.add('bounce-animation');
 
-        // removing animation class so when user clicks again it adds class so it can reanimate
+        // removing animation class so when user clicks again it adds class so it can reanimate -- for double click
         animationTextElement.addEventListener('animationend', clearAnimation);
     })
 
