@@ -1,81 +1,112 @@
-*{
+/* Reset styles */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html,body{
+/* Basic styling */
+html,
+body {
     height: 100%;
 }
 
-body{
+body {
     font-family: "Poppins", sans-serif;
     height: 100%;
     background-color: #274156;
 }
 
-.main-container{
-    position: relative;
-    height: 100%;
-}
-
-button{
+button {
+    margin: 16px 10px;
     padding: 8px 22px;
-    border: 3px solid rgba(255, 255, 255, 0.5);
-    background-color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: #D0CCD0;
     font-family: "Poppins", sans-serif;
     cursor: pointer;
 }
 
-.box{
-    width: 200px;
-    height: 200px;
+/* Container styles */
+.main-container {
+    position: relative;
+    height: 100%;
+}
+
+.main-container .btn-container {
+    display: flex;
+    justify-content: center;
+}
+
+.main-container .animation-container {
+    width: 80%;
+    height: fit-content;
     background-color: #D0CCD0;
+    padding: 20px;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    animation-duration: 2s;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
 }
 
-.fade-in-animation{
+/* Text animation styles */
+.animation-container .animation-text {
+    position: relative;
+    color: #fff;
+    animation-duration: 2s;
+    font-weight: 300;
+    color: #274156;
+}
+
+/* Utility classes */
+.d-none {
+    display: none;
+}
+
+/* Animation keyframes */
+.fade-in-animation {
     animation-name: fadeIn;
 }
 
-.bounce-animation{
+.bounce-animation {
     animation-name: bounce;
 }
 
 @keyframes fadeIn {
-    from{
+    from {
         opacity: 0;
     }
 
-    to{
+    to {
         opacity: 1;
     }
 }
 
 @keyframes bounce {
     0% {
-        transform: translate(-50%, -50%) translateY(-100px);
+        top: -20px;
         opacity: 0;
     }
 
-    25% {
-        transform: translate(-50%, -50%) translateY(80px);
+    20% {
+        top: 15px;
     }
 
-    50% {
-        transform: translate(-50%, -50%) translateY(-50px);
+    40% {
+        top: -12px;
     }
 
-    75% {
-        transform: translate(-50%, -50%) translateY(25px);
+    60% {
+        top: 10px;
+    }
+
+    80% {
+        top: -5px;
     }
 
     100% {
-        transform: translate(-50%, -50%) translateY(0);
+        top: 0;
         opacity: 1;
     }
 }

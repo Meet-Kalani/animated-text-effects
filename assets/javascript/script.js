@@ -1,19 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const box = document.querySelector('.box');
-    const fadeInBtn = document.querySelector('.fade-in-btn');
-    const bounceBtn = document.querySelector('.bounce-btn');
+    const fadeInBtnElement = document.querySelector('.fade-in-btn');
+    const bounceBtnElement = document.querySelector('.bounce-btn');
+    const typingBtnElement = document.querySelector('.typing-btn');
+    const animationTextElement = document.querySelector('.animation-text');
+    const textToAnimate = animationTextElement.textContent;
+    let timeoutId;
 
-    fadeInBtn.addEventListener('click', () => {
-        box.classList.remove('bouncex-animation');
-        
-        box.classList.add('fade-in-animation');
+    fadeInBtnElement.addEventListener('click', () => {
+        clearTimeout(timeoutId);
+        animationTextElement.textContent = textToAnimate;
+
+        // for reanimating text when user has already applied it
+        clearAnimation();
+        animationTextElement.classList.add('fade-in-animation');
+
+        // removing animation class so when user clicks again it adds class so it can reanimate
+        animationTextElement.addEventListener('animationend', clearAnimation);
     });
 
-    bounceBtn.addEventListener('click', () => {
-        box.classList.remove('fade-in-animation');
+    bounceBtnElement.addEventListener('click', () => {
+        clearTimeout(timeoutId);
+        animationTextElement.textContent = textToAnimate;
 
-        box.classList.add('bounce-animation');
+        // for reanimating text when user has already applied it
+        clearAnimation();
+        animationTextElement.classList.add('bounce-animation');
+
+        // removing animation class so when user clicks again it adds class so it can reanimate
+        animationTextElement.addEventListener('animationend', clearAnimation);
     })
 
-    box.style.animationName = null;
+    typingBtnElement.addEventListener('click',()=>{
+        clearTimeout(timeoutId);
+        animationTextElement.classList.remove('d-none');
+        animationTextElement.textContent = "";
+        animateText(animationTextElement,textToAnimate);
+    })
+
+    function animateText(animationTextElement,textToAnimate, i = 0){
+        animationTextElement.textContent += textToAnimate[i];
+        if(i === textToAnimate.length - 1){
+            return;
+        }
+
+        timeoutId = setTimeout(()=>animateText(animationTextElement,textToAnimate,i+1),100);
+    }
+
+    function clearAnimation(){
+        animationTextElement.classList = "animation-text";
+    }
 })
