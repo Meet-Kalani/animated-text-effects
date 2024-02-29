@@ -5,6 +5,9 @@ const typingBtnElement = document.querySelector(".typing-btn");
 const stopBtnElement = document.querySelector(".stop-btn");
 const animationTextElement = document.querySelector(".animation-text");
 
+// web worker
+let worker;
+
 // storing the initial text content for typing animation
 const initialText = animationTextElement.textContent;
 
@@ -13,6 +16,7 @@ let timeoutId;
 
 // event listener for stopping animation
 stopBtnElement.addEventListener("click", () => {
+  worker.postMessage('stop');
   animationTextElement.textContent = initialText;
   clearAnimation();
 });
@@ -40,36 +44,21 @@ function animationHandler(animationName) {
   animationTextElement.classList.add(animationName);
 }
 
+// was working on disabling click after first click 
 function typingAnimationHandler() {
   clearAnimation();
+  worker = new Worker("assets/js/web-worker.js");
 
-  // removing text content to enter character one by one to do typing animation
-  animationTextElement.textContent = "";
-  animationTyping(animationTextElement, initialText);
-}
+  worker.postMessage(initialText);
 
-// Function for displaying each character one by one to give typing effect
-function animationTyping(animationTextElement, textToAnimate, i = 0) {
-  // adding class so it can not pass through condition of restartAnimation() which is in animationHandler() function
-  animationTextElement.classList.add("typing-animation");
-
-  // appending character one by one
-  animationTextElement.textContent += textToAnimate[i];
-
-  if (i === textToAnimate.length - 1) {
-    return;
-  }
-
-  timeoutId = setTimeout(
-    () => animationTyping(animationTextElement, textToAnimate, i + 1),
-    10
-  );
+  worker.onmessage = (event) => {
+    animationTextElement.textContent = event.data;
+  };
 }
 
 function restartAnimation() {
   animationTextElement.textContent = initialText;
   clearAnimation();
-
   // void animationTextElement.offsetWidth;
 }
 
@@ -85,3 +74,4 @@ function clearAnimation() {
     );
   });
 }
+
