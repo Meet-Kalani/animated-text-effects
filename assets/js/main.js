@@ -1,51 +1,87 @@
 // DOM elements
-const fadeInBtnElement = document.querySelector('.fade-in-btn');
-const bounceBtnElement = document.querySelector('.bounce-btn');
-const typingBtnElement = document.querySelector('.typing-btn'); 
-const animationTextElement = document.querySelector('.animation-text');
+const fadeInBtnElement = document.querySelector(".fade-in-btn");
+const bounceBtnElement = document.querySelector(".bounce-btn");
+const typingBtnElement = document.querySelector(".typing-btn");
+const stopBtnElement = document.querySelector(".stop-btn");
+const animationTextElement = document.querySelector(".animation-text");
 
-// Storing the initial text content for typing animation
+// storing the initial text content for typing animation
 const initialText = animationTextElement.textContent;
-// Timeout ID for clearing setTimeout()
+
+// timeout ID for clearing setTimeout()
 let timeoutId;
 
-fadeInBtnElement.addEventListener('click', () => animation('fade-in-animation'));
-bounceBtnElement.addEventListener('click', () => animation('bounce-animation'));
+// event listener for stopping animation
+stopBtnElement.addEventListener("click", () => {
+  animationTextElement.textContent = initialText;
+  clearAnimation();
+});
 
-function animation(animationName){
-    // Only do restart when animation is applied
-    if(animationTextElement.classList.value !== 'animation-text'){
-        restartAnimation();
-    }
-    animationTextElement.classList.add(animationName);
+// event listener for fade in animation button
+fadeInBtnElement.addEventListener("click", () =>
+  animationHandler("fade-in-animation")
+);
+
+// event listener for bounce animation button
+bounceBtnElement.addEventListener("click", () =>
+  animationHandler("bounce-animation")
+);
+
+// event listener for typing animation button
+typingBtnElement.addEventListener("click", typingAnimationHandler);
+
+function animationHandler(animationName) {
+  // Only do restart when animation is applied
+  if (animationTextElement.classList.value !== "animation-text") {
+    restartAnimation();
+  }
+
+  // adding animation class to animate text
+  animationTextElement.classList.add(animationName);
 }
 
-typingBtnElement.addEventListener('click', () => {
-    clearTimeout(timeoutId);
-    clearAnimation();
-    animationTextElement.textContent = "";
-    animationTyping(animationTextElement, initialText);
-})
+function typingAnimationHandler() {
+  clearAnimation();
+
+  // removing text content to enter character one by one to do typing animation
+  animationTextElement.textContent = "";
+  animationTyping(animationTextElement, initialText);
+}
 
 // Function for displaying each character one by one to give typing effect
 function animationTyping(animationTextElement, textToAnimate, i = 0) {
-    animationTextElement.textContent += textToAnimate[i];
-    if (i === textToAnimate.length - 1) {
-        return;
-    }
+  // adding class so it can not pass through condition of restartAnimation() which is in animationHandler() function
+  animationTextElement.classList.add("typing-animation");
 
-    timeoutId = setTimeout(() => animationTyping(animationTextElement, textToAnimate, i + 1), 10);
+  // appending character one by one
+  animationTextElement.textContent += textToAnimate[i];
+
+  if (i === textToAnimate.length - 1) {
+    return;
+  }
+
+  timeoutId = setTimeout(
+    () => animationTyping(animationTextElement, textToAnimate, i + 1),
+    10
+  );
 }
 
-function restartAnimation(){
-    clearTimeout(timeoutId);
-    animationTextElement.textContent = initialText;
-    clearAnimation();
+function restartAnimation() {
+  animationTextElement.textContent = initialText;
+  clearAnimation();
 
-    // triggering reflow
-    void animationTextElement.offsetWidth; 
+  // void animationTextElement.offsetWidth;
 }
 
-function clearAnimation(){
-    animationTextElement.classList.remove('fade-in-animation','bounce-animation');
+function clearAnimation() {
+  // clear timeout to stop typing animation
+  clearTimeout(timeoutId);
+
+  requestAnimationFrame(() => {
+    animationTextElement.classList.remove(
+      "fade-in-animation",
+      "bounce-animation",
+      "typing-animation"
+    );
+  });
 }
