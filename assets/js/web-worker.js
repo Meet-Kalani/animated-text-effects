@@ -9,7 +9,7 @@ self.onmessage = (event) => {
             postMessage(partialText);
             currentIndex++;
         } else {
-            // postMessage({type:"complete"})
+            postMessage("complete")
             clearInterval(typingAnimationInterval);
         }
     }, 10);

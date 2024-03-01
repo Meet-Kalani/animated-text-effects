@@ -7,65 +7,68 @@ const animationTextElement = document.querySelector(".animation-text");
 
 // web worker
 let worker;
+let isWorkerRunning = false;
 
 // storing the initial text content for typing animation
 const initialText = animationTextElement.textContent;
 
-// timeout ID for clearing setTimeout()
-let timeoutId;
-
 // event listener for stopping animation
 stopBtnElement.addEventListener("click", () => {
-  worker.postMessage('stop');
-  animationTextElement.textContent = initialText;
+  // if typing animation button is disabled that means the typing animation is currently running and you have to stop it.
+  if (typingBtnElement.disabled) {
+    stopAnimation();
+  }
   clearAnimation();
 });
 
 // event listener for fade in animation button
-fadeInBtnElement.addEventListener("click", () =>
-  animationHandler("fade-in-animation")
-);
+fadeInBtnElement.addEventListener("click", () => {
+  if (typingBtnElement.disabled) {
+    stopAnimation();
+  }
+  animationHandler("fade-in-animation");
+});
 
 // event listener for bounce animation button
-bounceBtnElement.addEventListener("click", () =>
-  animationHandler("bounce-animation")
-);
+bounceBtnElement.addEventListener("click", () => {
+  if (typingBtnElement.disabled) {
+    stopAnimation();
+  }
+  animationHandler("bounce-animation");
+});
 
 // event listener for typing animation button
 typingBtnElement.addEventListener("click", typingAnimationHandler);
 
 function animationHandler(animationName) {
-  // Only do restart when animation is applied
+  // Only do clearAnimation() when animation is applied
   if (animationTextElement.classList.value !== "animation-text") {
-    restartAnimation();
+    clearAnimation();
   }
 
   // adding animation class to animate text
   animationTextElement.classList.add(animationName);
 }
 
-// was working on disabling click after first click 
 function typingAnimationHandler() {
   clearAnimation();
+  // using web worker to do javascript excution in background
   worker = new Worker("assets/js/web-worker.js");
 
   worker.postMessage(initialText);
 
+  // if the worker returns text data then disable typing animation button and then enabling it when "complete" is returned;
   worker.onmessage = (event) => {
-    animationTextElement.textContent = event.data;
+    if (event.data === "complete") {
+      typingBtnElement.disabled = false;
+    } else {
+      typingBtnElement.disabled = true;
+      animationTextElement.textContent = event.data;
+    }
   };
 }
 
-function restartAnimation() {
-  animationTextElement.textContent = initialText;
-  clearAnimation();
-  // void animationTextElement.offsetWidth;
-}
-
 function clearAnimation() {
-  // clear timeout to stop typing animation
-  clearTimeout(timeoutId);
-
   requestAnimationFrame(() => {
     animationTextElement.classList.remove(
       "fade-in-animation",
@@ -75,3 +78,9 @@ function clearAnimation() {
   });
 }
 
+function stopAnimation() {
+  typingBtnElement.disabled = false;
+  animationTextElement.textContent = initialText;
+  worker.postMessage("stop");
+  clearAnimation();
+}
